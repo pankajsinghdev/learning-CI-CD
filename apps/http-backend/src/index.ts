@@ -1,7 +1,8 @@
+import { prismaClient } from "@repo/db/client";
 import express, { Request, Response } from "express";
 
 const app = express();
-const PORT = 3001;
+const PORT = 3002;
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
@@ -10,9 +11,19 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.post("/signup", (req: Request, res: Response) => {
+app.post("/signup", async (req: Request, res: Response) => {
+  const { first_name, last_name, email, password } = req.body;
+  const user = await prismaClient.user.create({
+    data: {
+      first_name: first_name,
+      last_name: last_name,
+      email: email,
+      password: password,
+    },
+  });
   res.json({
-    message: "hello there",
+    message: "User Create Successfully",
+    user,
   });
 });
 app.post("/signin", (req: Request, res: Response) => {
@@ -21,19 +32,19 @@ app.post("/signin", (req: Request, res: Response) => {
   });
 });
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/user", (req: Request, res: Response) => {
   res.json({
     message: "hello there",
   });
 });
 
-app.get("/", (req: Request, res: Response) => {
+app.post("/user", (req: Request, res: Response) => {
   res.json({
     message: "hello there",
   });
 });
 
-app.get("/", (req: Request, res: Response) => {
+app.put("/user", (req: Request, res: Response) => {
   res.json({
     message: "hello there",
   });
